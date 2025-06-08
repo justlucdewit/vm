@@ -1,0 +1,8 @@
+{
+    "files.associations": {
+        "*.embeddedhtml": "html",
+        "*.blade.php": "blade",
+        "*.env": "properties",
+        "stdlib.h": "c"
+    }
+}
