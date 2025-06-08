@@ -1,3 +1,5 @@
+#pragma once
+
 #include <stdio.h>
 #include <string.h>
 #include <stdbool.h>
@@ -38,14 +40,14 @@ const char* stringify_token_type(TokenType tt) {
     return "UNKNOWN";
 }
 
-typedef struct {
+typedef struct Token {
     char* value;      // Pointer to a string containing the value of this token
     u_int32_t line;     // The line at which this token is found in the source code
     u_int32_t col;      // The column at which this token is found in the source code
     TokenType token_type; // The type of the token
 } Token;
 
-typedef struct {
+typedef struct TokenizationResult {
     Token* tokens;
     u_int32_t token_count;
 } TokenizationResult;
@@ -222,6 +224,26 @@ TokenizationResult tokenize_code(char* code) {
             // Add to the token and continue to next char
             insert_at_end(char, token_value, current_char);
         }
+    }
+
+    // If there is anything left, insert at end
+    if (token_value_count > 0) {
+        // Get the final token value
+        string final_token_value = strndup(token_value, token_value_count);
+
+        // Create the new token
+        Token new_token = {
+            .value = final_token_value,
+            .col = 0,
+            .line = 0,
+            .token_type = determine_token_type(final_token_value)
+        };
+
+        // Insert new token in array
+        insert_at_end(Token, tokens, new_token);
+
+        // Reset the token value
+        empty_list(char, token_value);
     }
 
     return (TokenizationResult) {

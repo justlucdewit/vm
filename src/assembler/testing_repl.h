@@ -3,6 +3,8 @@
 #include <stdlib.h>
 
 #include "lexical_analyzer.h"
+#include "preprocess.h"
+#include "file_loader.h"
 
 void start_testing_repl() {
     printf("CC Assembler REPL - Written by Luke_\n\n");
@@ -30,24 +32,8 @@ void start_testing_repl() {
 
         else if (strcmp(command, "load") == 0) {
             if (arg_count == 1) {
-                
-                // Load the file into memory
-                FILE* file = fopen(arg_1, "rb");
-                if (file == NULL) {
-                    printf("Error: Could not open file '%s'\n", arg_1);
-                } else {
-                    printf("Loading file: '%s'\n", arg_1);
-                    free(loaded_code);
-
-                    fseek(file, 0, SEEK_END);
-                    long filesize = ftell(file);
-                    rewind(file);
-
-                    loaded_code = malloc(filesize + 1);
-                    fread(loaded_code, 1, filesize, file);
-                    loaded_code[filesize] = '\0';
-                    fclose(file);
-                }
+                free(loaded_code);
+                loaded_code = load_file_contents(arg_1);
 
                 printf("\n");
             }
@@ -63,8 +49,18 @@ void start_testing_repl() {
 
         else if (strcmp(command, "lex") == 0) {
             TokenizationResult TokenizationResult = tokenize_code(loaded_code);
-            print_tokens(TokenizationResult);
-            
+            print_tokens(TokenizationResult);   
+        }
+
+        else if (strcmp(command, "pp") == 0) {
+            // Tokenize the code
+            TokenizationResult TokenizationResult = tokenize_code(loaded_code);
+
+            // Preprocess the tokens
+            TokenizationResult = preprocess_tokens(TokenizationResult);
+
+            // Print the tokens for debugging
+            print_tokens(TokenizationResult);   
         }
 
         else if (strcmp(command, "help") == 0) {
@@ -74,12 +70,13 @@ void start_testing_repl() {
             printf("load\tLoad the file given as the first parameter\n");
             printf("code\tShow what code was loaded\n");
             printf("lex\tLexically analyze the given code\n\n");
+            printf("pp\tPreProcess the given code\n\n");
         }
 
         else {
             printf("Error: unknown command: '%s'\n\n", command);
         }
 
-        
+
     }
 }
