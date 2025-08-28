@@ -3,6 +3,7 @@
         "*.embeddedhtml": "html",
         "*.blade.php": "blade",
         "*.env": "properties",
-        "stdlib.h": "c"
+        "stdlib.h": "c",
+        "lexical_analyzer.h": "c"
     }
 }

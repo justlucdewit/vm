@@ -5,6 +5,8 @@
 #include "lexical_analyzer.h"
 #include "preprocess.h"
 #include "file_loader.h"
+#include "parser.h"
+#include "assemble.h"
 
 void start_testing_repl() {
     printf("CC Assembler REPL - Written by Luke_\n\n");
@@ -63,6 +65,34 @@ void start_testing_repl() {
             print_tokens(TokenizationResult);   
         }
 
+        else if (strcmp(command, "parse") == 0) {
+            // Tokenize the code
+            TokenizationResult tokenizationResult = tokenize_code(loaded_code);
+
+            // Preprocess the tokens
+            tokenizationResult = preprocess_tokens(tokenizationResult);
+
+            // Parse the final tokens
+            ParserResult parserResult = parse(tokenizationResult);
+
+            // Print the end result
+            print_parse_result(parserResult);
+        }
+
+        else if (strcmp(command, "asm") == 0) {
+            // Tokenize the code
+            TokenizationResult tokenizationResult = tokenize_code(loaded_code);
+
+            // Preprocess the tokens
+            tokenizationResult = preprocess_tokens(tokenizationResult);
+
+            // Parse the final tokens
+            ParserResult parserResult = parse(tokenizationResult);
+
+            // Assemble the parsed result
+            assemble_parseresult(parserResult, "out.bin");
+        }
+
         else if (strcmp(command, "help") == 0) {
             printf("exit\tExit the REPL\n");
             printf("clear\tWipe the terminal clear\n");
@@ -71,6 +101,7 @@ void start_testing_repl() {
             printf("code\tShow what code was loaded\n");
             printf("lex\tLexically analyze the given code\n\n");
             printf("pp\tPreProcess the given code\n\n");
+            printf("parse\tParse the given code\n\n");
         }
 
         else {
