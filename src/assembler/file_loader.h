@@ -12,8 +12,6 @@ char* load_file_contents(char* filepath) {
         printf("Error: Could not open file '%s'\n", filepath);
         return NULL;
     } else {
-        printf("Loading file: '%s'\n", filepath);
-
         fseek(file, 0, SEEK_END);
         long filesize = ftell(file);
         rewind(file);
