@@ -33,7 +33,7 @@ ParserResult parse(TokenizationResult tokens) {
         // Mov instruction
         if (strcmp(t.value, "mov") == 0) {
             Token arg1 = tokens.tokens[i++];
-            Token arg2 = tokens.tokens[i++];
+            Token arg2 = tokens.tokens[i];
 
             if (arg1.token_type == TT_REGISTER && arg2.token_type == TT_INT_LITERAL) {
                 Instruction instruction = {
