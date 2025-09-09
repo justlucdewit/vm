@@ -4,7 +4,10 @@
 
 typedef enum {
     IT_MOV_REG_INT,
+    IT_MOV_REG_REG,
     IT_ADD_REG_REG,
+    IT_SYSCALL,
+    IT_EXIT,
 } InstructionType;
 
 typedef struct {
