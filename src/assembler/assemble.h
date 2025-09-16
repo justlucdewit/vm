@@ -33,8 +33,7 @@ void assemble_parseresult(ParserResult parserResult, char* output_filename) {
             insert_at_end(uint8_t, output_bytes, opcode);
 
             // Register
-            char* reg_str = inst.arguments[0];
-            uint8_t reg_byte = register_to_byte(reg_str);
+            uint8_t reg_byte = register_to_byte(inst.arguments[0]);
             insert_at_end(uint8_t, output_bytes, reg_byte);
 
             // Integer (4 bytes, big endian)
@@ -43,6 +42,17 @@ void assemble_parseresult(ParserResult parserResult, char* output_filename) {
             insert_at_end(uint8_t, output_bytes, (int_value >> 16) & 0xFF);
             insert_at_end(uint8_t, output_bytes, (int_value >> 8) & 0xFF);
             insert_at_end(uint8_t, output_bytes, int_value & 0xFF);
+        } else if (inst.type == IT_MOV_REG_REG) {
+            // Opcode for MOV_REG_REG
+            insert_at_end(uint8_t, output_bytes, inst.type);
+
+            // Register
+            uint8_t reg_byte = register_to_byte(inst.arguments[0]);
+            insert_at_end(uint8_t, output_bytes, reg_byte);
+
+            // Second Register
+            reg_byte = register_to_byte(inst.arguments[1]);
+            insert_at_end(uint8_t, output_bytes, reg_byte);
         } else {
             printf("[error] Unknown instruction type %d\n", inst.type);
         }

@@ -3,11 +3,25 @@
 #include "lexical_analyzer.h"
 
 typedef enum {
-    IT_MOV_REG_INT,
-    IT_MOV_REG_REG,
-    IT_ADD_REG_REG,
-    IT_SYSCALL,
-    IT_EXIT,
+    IT_MOV_REG_INT = 0x00,
+    IT_MOV_REG_REG = 0x01,
+    IT_MOV_MEM_INT = 0x02,
+    IT_MOV_MEM_MEM = 0x03,
+    IT_MOV_REG_MEM = 0x04,
+    IT_MOV_MEM_REG = 0x05,
+
+    IT_PUSH_INT = 0x06,
+    IT_PUSH_REG = 0x07,
+    IT_PUSH_MEM = 0x08,
+    IT_DUP      = 0x09,
+    IT_POP_REG  = 0x0A,
+    IT_POP_MEM  = 0x0B,
+    IT_POP      = 0x0C, 
+
+    IT_ADD_REG_REG = 0x20,
+
+    IT_EXIT        = 0xF0,
+    IT_SYSCALL     = 0xFF,
 } InstructionType;
 
 typedef struct {
@@ -42,7 +56,18 @@ ParserResult parse(TokenizationResult tokens) {
                 };
 
                 insert_at_end(Instruction, instructions, instruction);
+            } else if (arg1.token_type == TT_REGISTER && arg2.token_type == TT_REGISTER) {
+                Instruction instruction = {
+                    .type = IT_MOV_REG_REG,
+                    .arguments = { arg1.value, arg2.value }
+                };
+
+                insert_at_end(Instruction, instructions, instruction);
+            } else {
+                puts("Error: Unimplemented instruction");
             }
+        } else {
+            puts("Error: Unimplemented instruction type");
         }
     }
 

@@ -5,6 +5,9 @@ const char* register_list[] =  { "a", "b", "c", "d" };
 
 const char* instruction_list[] = {
     "mov",
+    "push",
+    "dup",
+    "pop",
     "add",
     "exit"
 };
